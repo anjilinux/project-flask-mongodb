@@ -5,15 +5,55 @@ import pandas as pd
 import numpy as np
 from datetime import date
 from datetime import timedelta
+from flask_apscheduler import APScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 
 
+scheduler = APScheduler()
+
+def scheduleTask():
+    client = MongoClient("mongodb+srv://Shubham:Shubham123@cluster0.k8b4o.mongodb.net/Final_Project?ssl=true&ssl_cert_reqs=CERT_NONE")
+    db = client.get_database('Final_Project')
+    records = db.Rates
+
+    for start, end in res.items():
+
+        url = "https://api.exchangerate.host/fluctuation?start_date=" + start + "&end_date=" +  end + "&symbols=" + symbols + '&base=USD' + "&format=json"
+        #print(url)
+        r = requests.get(url)
+        if r.status_code == 200:
+            data = r.json()
+            #print(data)
+        
+            #time.sleep(5)
+            records.insert_one(data) #inserting data into MongoDB
+
+            #Line Charts
+            lineChart_RUB.append(data["rates"]["RUB"]["change"])
+            lineChart_USD.append(data["rates"]["USD"]["change"])
+            lineChart_CAD.append(data["rates"]["CAD"]["change"])
+            lineChart_GBP.append(data["rates"]["GBP"]["change"])
+            lineChart_INR.append(data["rates"]["INR"]["change"])
+
+            #Bar Charts
+            usd.append(data["rates"]["USD"]["start_rate"])
+            cad.append(data["rates"]["CAD"]["start_rate"])
+            inr.append(data["rates"]["INR"]["start_rate"])
+            rub.append(data["rates"]["RUB"]["start_rate"])
+            gbp.append(data["rates"]["GBP"]["start_rate"])
+            eur.append(data["rates"]["EUR"]["start_rate"])
+            aed.append(data["rates"]["AED"]["start_rate"])
+            cny.append(data["rates"]["CNY"]["start_rate"])
+        else:
+            exit()
+
 
 # MONGO DB Connection
-client = MongoClient("mongodb+srv://Shubham:Shubham123@cluster0.k8b4o.mongodb.net/Final_Project?ssl=true&ssl_cert_reqs=CERT_NONE")
-db = client.get_database('Final_Project')
-records = db.Rates
+#client = MongoClient("mongodb+srv://Shubham:Shubham123@cluster0.k8b4o.mongodb.net/Final_Project?ssl=true&ssl_cert_reqs=CERT_NONE")
+#db = client.get_database('Final_Project')
+#records = db.Rates
 
 # Dates for 2021 (Ref : https://www.w3resource.com/pandas/date_range.php)
 y1 = '2021'
@@ -62,36 +102,6 @@ res = {start_date[i]: end_date[i] for i in range(len(start_date))}
 
 
 
-for start, end in res.items():
-
-    url = "https://api.exchangerate.host/fluctuation?start_date=" + start + "&end_date=" +  end + "&symbols=" + symbols + '&base=USD' + "&format=json"
-    #print(url)
-    r = requests.get(url)
-    if r.status_code == 200:
-        data = r.json()
-        #print(data)
-        
-        #time.sleep(5)
-        records.insert_one(data) #inserting data into MongoDB
-
-        #Line Charts
-        lineChart_RUB.append(data["rates"]["RUB"]["change"])
-        lineChart_USD.append(data["rates"]["USD"]["change"])
-        lineChart_CAD.append(data["rates"]["CAD"]["change"])
-        lineChart_GBP.append(data["rates"]["GBP"]["change"])
-        lineChart_INR.append(data["rates"]["INR"]["change"])
-
-        #Bar Charts
-        usd.append(data["rates"]["USD"]["start_rate"])
-        cad.append(data["rates"]["CAD"]["start_rate"])
-        inr.append(data["rates"]["INR"]["start_rate"])
-        rub.append(data["rates"]["RUB"]["start_rate"])
-        gbp.append(data["rates"]["GBP"]["start_rate"])
-        eur.append(data["rates"]["EUR"]["start_rate"])
-        aed.append(data["rates"]["AED"]["start_rate"])
-        cny.append(data["rates"]["CNY"]["start_rate"])
-    else:
-        exit()
 
 @app.route("/")
 def index():
@@ -129,13 +139,17 @@ def lineChart_M():
     return render_template('lineChart Multiple.html',labels = months, values1 = values1, values2 = values2, values3 = values3)
 
 Bar_Values = [np.average(usd), np.average(cad), np.average(aed), np.average(gbp),np.average(cny),np.average(eur)]
+
 @app.route("/BarChart")
 def BarChart():
     labels = ["USD", "CAD", "AED", "GBP", "CNY", "EUR"]
     values = Bar_Values
     return render_template('BarChart.html', labels=labels, values=values)
 
-
-if __name__ == "__main__":
-    app.debug = True
+if __name__ == '__main__':
+    scheduler.add_job(id = 'Scheduled Task', func=scheduleTask, trigger="interval", hours=24)
+    scheduler.start()
     app.run()
+
+
+
