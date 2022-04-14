@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Bar Chart{% endblock %}
+{% block content %}
+
+<html>
+<head>
+    <p></p>
+    <h2 style="font-family:Times New Roman,serif;text-align:center">Comparison between different currency's average start rate for the year 2021 with base as USD</h2>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div style="height: 550px">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script>
+      var ctx = document.getElementById('myChart');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          options: { maintainAspectRatio: false, plugins: { legend: { display: false }}},
+
+          data: {
+            labels: {{ labels | safe }},
+            datasets: [{
+                data: {{ values | safe }},
+                borderColor: "#3e95cd",
+                backgroundColor: [
+                    "#ef9b20",
+                    "#87bc45",
+                    "#27aeef",
+                    "#b33dc6",
+                    "#bdcf32",
+                    "#ea5545",
+                    "#ef9b20"
+                ],
+                fill: false
+              }
+            ]
+
+          }
+
+		}
+        );
+
+    </script>
+
+</body>
+</html>
+
+{% endblock %}

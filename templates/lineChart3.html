@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Line Chart INR{% endblock %}
+{% block content %}
+
+<!DOCTYPE html>
+<head>
+    <p></p>
+    <h2 style="font-family:Times New Roman,serif;text-align:center">Change in Indian Rupee with respect to USD</h2>
+</head>
+<body>
+    <div style="height:550px">
+        <canvas id="myChart"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const labels = [];
+
+        const data = {
+            labels: {{ labels | safe }},
+            datasets: [{
+                label: 'INR',
+                backgroundColor: 'rgb(0, 200, 0)',
+                borderColor: 'rgb(0, 200, 0)',
+                data: {{ values | safe }},
+                //fill:true
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {maintainAspectRatio: false,}
+        };
+    </script>
+    <script>
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
+
+
+</body>
+</html>
+
+{% endblock %}

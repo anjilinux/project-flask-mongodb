@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Line Chart Multi Currency Trend{% endblock %}
+{% block content %}
+
+<!DOCTYPE html>
+<head>
+    <p></p>
+    <h2 style="font-family:Times New Roman,serif;text-align:center">RUB vs CAD vs INR</h2>
+</head>
+<body>
+    <div style="height: 550px">
+        <canvas id="myChart"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const labels = [];
+
+        const data = {
+            labels: {{ labels | safe }},
+            datasets: [{
+                label: 'RUB',
+                backgroundColor: 'rgb(0, 99, 132)',
+                borderColor: 'rgb(0, 99, 132)',
+                data: {{ values1 | safe }},
+                //fill:true
+            },
+            {
+                label: 'CAD',
+                backgroundColor: 'rgb(245, 102, 66)',
+                borderColor: 'rgb(245, 102, 66)',
+                data: {{ values2 | safe }},
+                //fill:true
+            },
+            {
+                label: 'INR',
+                backgroundColor: 'rgb(0, 200, 0)',
+                borderColor: 'rgb(0, 200, 0)',
+                data: {{ values3 | safe }},
+                //fill:true
+            }]
+        };
+
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {maintainAspectRatio: false,}
+        };
+    </script>
+    <script>
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
+
+
+</body>
+</html>
+
+{% endblock %}

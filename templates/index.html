@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Home Page{% endblock %}
+{% block content %}
+
+<!DOCTYPE html>
+<head>
+    <style>
+        body {
+            background-image: url('/static/cool.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+            overflow-y: hidden; /* Hide vertical scrollbar */
+            overflow-x: hidden; /* Hide horizontal scrollbar */
+        }
+    </style>
+
+    <div class="container-fluid">
+        <p></p>
+        <h1 style="text-align:center; font-family: 'Times New Roman', Times, serif, serif; ">BDAT 1004 Group 4 Final Project</h1>
+        <p style="text-align:center; font-family: 'Times New Roman';font-size:25px">This website compares different currencies</p>
+    </div>
+
+    <style>
+        .style-t {
+            border-collapse: collapse;
+            margin: 20px 34%;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            min-width: 430px;
+            box-shadow: 0 0 15px rgb(8,80,122);
+        }
+
+            .style-t thead tr {
+                background-color: #408AB5;
+                color: #ffffff;
+                text-align: left;
+            }
+
+            .style-t th,
+            .style-t td {
+                padding: 12px 50px;
+            }
+
+            .style-t tbody tr {
+                border-bottom: 0.9px solid #dddddd;
+                background-color:white;
+            }
+
+                .style-t tbody tr:last-of-type {
+                    border-bottom: 2px solid #408AB5;
+                }
+    </style>
+</head>
+<body>
+    <table class="style-t">
+        <thead>
+            <tr>
+                <th>Currency Code</th>
+                <th>Currency</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>EUR</td>
+                <td>Euro</td>
+            </tr>
+            <tr>
+                <td>USD</td>
+                <td>US Dollar</td>
+            </tr>
+            <tr>
+                <td>AED</td>
+                <td>UAE Dirham</td>
+            </tr>
+            <tr>
+                <td>GBP</td>
+                <td>Pound Sterling</td>
+            </tr>
+            <tr>
+                <td>CAD</td>
+                <td>Canadian Dollar</td>
+            </tr>
+            <tr>
+                <td>RUB</td>
+                <td>Russian Ruble</td>
+            </tr>
+            <tr>
+                <td>INR</td>
+                <td>Indian Rupee</td>
+            </tr>
+            <tr>
+                <td>JPY</td>
+                <td>Japanese Yen</td>
+            </tr>
+            <tr>
+                <td>CNY</td>
+                <td>Chinese Yuan</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+
+{% endblock %}
